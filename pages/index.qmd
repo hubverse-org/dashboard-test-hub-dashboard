@@ -1,7 +1,6 @@
 ---
-title: "Introduction"
+title: "Dashboard Test Hub"
 ---
-
 
 ::: {style='display:flex; align-items: center; justify-content: center'}
 
@@ -9,17 +8,4 @@ title: "Introduction"
 
 :::
 
-
-This Dashboard is build with Quarto. 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-Authors can use $\LaTeX$ to write equations and even put in callouts:
-
-:::{.callout-note}
-
-Look at this note!
-
-:::
-
-
-
+This is a test dashboard for the hubverse dashboard pipeline. It is paired with the [dashboard-test-hub](https://github.com/hubverse-org/dashboard-test-hub) and used for development, testing, and CI validation.

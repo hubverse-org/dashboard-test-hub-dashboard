@@ -1,15 +1,14 @@
 ---
-title: "About the team"
+title: "About"
 ---
 
-## Introduction
+## Purpose
 
-This is our staff
+This is a development and test dashboard for the hubverse dashboard pipeline. It is not a production dashboard.
 
-### Dale
+The hub data comes from [dashboard-test-hub](https://github.com/hubverse-org/dashboard-test-hub), a fork of [example-complex-forecast-hub](https://github.com/hubverse-org/example-complex-forecast-hub) containing 3 models, 4 reference dates, and 52 locations.
 
-![Dale is the boss](img/dale.jpeg){alt="A cute, old, brown tabby cat sitting on a hook rug in a hallway. She is staring gently into the camera."}
+## Related resources
 
-### Bubblegum
-
-![Bubblegum is the scientist](img/bubblegum.jpeg){alt="A large, fluffy black cat sitting in a hallway. It is in profile and staring at the camera as if surprised."}
+- [hub-dashboard-control-room](https://github.com/hubverse-org/hub-dashboard-control-room): Workflow orchestration
+- [hubverse-claude-skills](https://github.com/hubverse-org/hubverse-claude-skills): Claude Code skills for dashboard operations
