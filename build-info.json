@@ -1,0 +1,33 @@
+{
+  "build_timestamp": "2026-03-27T10:56:06Z",
+  "predtimechart": {
+    "version": "v2.2.8",
+    "repo": "hubverse-org/hub-dashboard-predtimechart",
+    "url": "https://github.com/hubverse-org/hub-dashboard-predtimechart/releases/tag/v2.2.8"
+  },
+  "predevals_docker": {
+    "image": "ghcr.io/hubverse-org/hubpredevalsdata-docker:latest",
+    "digest": "sha256:885b64c59e8e07d549fed4be82a6cf76b76372696de8d53ff11ef4cb532368a8",
+    "url": "https://github.com/hubverse-org/hubPredEvalsData-docker/pkgs/container/hubpredevalsdata-docker"
+  },
+  "site_builder": {
+    "image": "ghcr.io/hubverse-org/hub-dash-site-builder:latest",
+    "digest": "sha256:4b6029d59b626d9082f463dd56f9fd2f5f626ac8030322f05cbcaaa4359be1b0",
+    "url": "https://github.com/hubverse-org/hub-dash-site-builder/pkgs/container/hub-dash-site-builder"
+  },
+  "dashboard": {
+    "repo": "hubverse-org/dashboard-test-hub-dashboard",
+    "commit": "f520ccc",
+    "url": "https://github.com/hubverse-org/dashboard-test-hub-dashboard/commit/f520ccc9b863f6e1e842e7b14dee94b715dd0ef5"
+  },
+  "hub": {
+    "repo": "hubverse-org/dashboard-test-hub",
+    "commit": "808aeaa",
+    "url": "https://github.com/hubverse-org/dashboard-test-hub/commit/808aeaaedf858943862f060cef4d972db6c84e0a"
+  },
+  "control_room": {
+    "repo": "hubverse-org/hub-dashboard-control-room",
+    "ref": "main",
+    "url": "https://github.com/hubverse-org/hub-dashboard-control-room"
+  }
+}
