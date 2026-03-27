@@ -35,6 +35,12 @@ for (var i = 0; i < all_links.length; i++){
   color: #6c757d;
   text-decoration: underline;
 }
+.build-provenance code {
+  font-size: 0.7rem;
+  background-color: #e9ecef;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+}
 </style>
 
 <div class="build-provenance" id="build-provenance"></div>
@@ -102,30 +108,34 @@ for (var i = 0; i < all_links.length; i++){
       }
 
       var items = [];
+      function code(text) {
+        return '<code>' + text + '</code>';
+      }
+
       if (info.predtimechart && info.predtimechart.version) {
         items.push('<a href="' + info.predtimechart.url + '">predtimechart ' +
-                   info.predtimechart.version + '</a>');
+                   code(info.predtimechart.version) + '</a>');
       }
       if (info.predevals_docker && info.predevals_docker.digest) {
         items.push('<a href="' + info.predevals_docker.url + '">predevals ' +
-                   info.predevals_docker.digest.substring(0, 19) + '</a>');
+                   code(info.predevals_docker.digest.substring(0, 19)) + '</a>');
       }
       if (info.site_builder && info.site_builder.digest) {
         items.push('<a href="' + info.site_builder.url + '">site-builder ' +
-                   info.site_builder.digest.substring(0, 19) + '</a>');
+                   code(info.site_builder.digest.substring(0, 19)) + '</a>');
       }
       if (info.dashboard && info.dashboard.commit) {
         items.push('<a href="' + info.dashboard.url + '">dashboard ' +
-                   info.dashboard.commit + '</a>' + branchLabel(info.dashboard));
+                   code(info.dashboard.commit) + '</a>' + branchLabel(info.dashboard));
       }
       if (info.hub && info.hub.commit) {
         items.push('<a href="' + info.hub.url + '">hub ' +
-                   info.hub.commit + '</a>' + branchLabel(info.hub));
+                   code(info.hub.commit) + '</a>' + branchLabel(info.hub));
       }
 
-      el.innerHTML = '<details><summary>Build info &middot; ' + ts +
-        '</summary><div class="build-provenance-details">' +
-        items.join(' &middot; ') + '</div></details>';
+      el.innerHTML = '<div>Build info &middot; ' + ts + '</div>' +
+        '<div class="build-provenance-details">' +
+        items.join(' &middot; ') + '</div>';
     })
     .catch(function() {
       // Silently fail if build-info.json is not available
