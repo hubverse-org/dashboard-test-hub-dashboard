@@ -48,7 +48,9 @@ runs:
         hub_slug=$(gh api "repos/${{ github.repository }}/contents/site-config.yml" \
           --jq '.content' | base64 -d | grep '^hub:' | sed 's/hub: *"//;s/".*//;s|/$||')
         echo "slug=$hub_slug" >> "$GITHUB_OUTPUT"
-        commit=$(gh api "repos/${hub_slug}/commits/main" --jq '.sha')
+        hub_branch="main"
+        echo "branch=$hub_branch" >> "$GITHUB_OUTPUT"
+        commit=$(gh api "repos/${hub_slug}/commits/${hub_branch}" --jq '.sha')
         echo "commit=$commit" >> "$GITHUB_OUTPUT"
 
     - name: "Write and push build-info.json"
@@ -59,6 +61,7 @@ runs:
         PREDEVALS_DIGEST: ${{ steps.predevals.outputs.digest }}
         SITE_BUILDER_DIGEST: ${{ steps.site-builder.outputs.digest }}
         HUB_SLUG: ${{ steps.hub.outputs.slug }}
+        HUB_BRANCH: ${{ steps.hub.outputs.branch }}
         HUB_COMMIT: ${{ steps.hub.outputs.commit }}
       run: |
         SHORT_DASH=$(echo "${{ github.sha }}" | head -c 7)
@@ -94,11 +97,13 @@ runs:
           },
           "dashboard": {
             "repo": "${{ github.repository }}",
+            "branch": "${{ github.ref_name }}",
             "commit": "${SHORT_DASH}",
             "url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
           },
           "hub": {
             "repo": "${HUB_SLUG}",
+            "branch": "${HUB_BRANCH}",
             "commit": "${SHORT_HUB}",
             "url": "https://github.com/${HUB_SLUG}/commit/${HUB_COMMIT}"
           },
