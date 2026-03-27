@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This is a development and test dashboard for the hubverse dashboard pipeline. It is not a production dashboard.\nThe hub data comes from dashboard-test-hub, a fork of example-complex-forecast-hub containing 3 models, 4 reference dates, and 52 locations."
+  },
+  {
+    "objectID": "about.html#purpose",
+    "href": "about.html#purpose",
+    "title": "About",
+    "section": "",
+    "text": "This is a development and test dashboard for the hubverse dashboard pipeline. It is not a production dashboard.\nThe hub data comes from dashboard-test-hub, a fork of example-complex-forecast-hub containing 3 models, 4 reference dates, and 52 locations."
+  },
+  {
+    "objectID": "about.html#related-resources",
+    "href": "about.html#related-resources",
+    "title": "About",
+    "section": "Related resources",
+    "text": "Related resources\n\nhub-dashboard-control-room: Workflow orchestration\nhubverse-claude-skills: Claude Code skills for dashboard operations"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Dashboard Test Hub",
+    "section": "",
+    "text": "View The Latest Forecasts\n\nThis is a test dashboard for the hubverse dashboard pipeline. It is paired with the dashboard-test-hub and used for development, testing, and CI validation."
+  },
+  {
+    "objectID": "forecast.html",
+    "href": "forecast.html",
+    "title": "Dashboard Test Hub",
+    "section": "",
+    "text": "this is replaced"
+  },
+  {
+    "objectID": "eval.html",
+    "href": "eval.html",
+    "title": "Dashboard Test Hub",
+    "section": "",
+    "text": "this is replaced"
+  }
+]
