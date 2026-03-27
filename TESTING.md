@@ -8,16 +8,9 @@ The rendered dashboard site includes a collapsible footer showing the exact tool
 
 The provenance system has three parts:
 
-1. **Data build** (`build-data.yaml`): After the reusable data workflow completes, a `build-info` job queries tool versions and pushes `build-info.json` to the `ptc/data` branch. This captures:
-   - predtimechart release tag
-   - predevals Docker image digest
-   - hub repo commit SHA
-   - dashboard repo commit SHA
-   - build timestamp
+1. **Site build** (`build-site.yaml`): Before the reusable site workflow runs, a `build-provenance` job uses the composite action (`.github/actions/build-provenance`) to query all tool versions and push `build-info.json` to an orphan `build-info` branch. This captures all tool versions, Docker image digests, repo commits, and the build timestamp in one step.
 
-2. **Site build** (`build-site.yaml`): Before the reusable site workflow runs, an `update-site-builder-info` job queries the site-builder Docker image digest and updates `build-info.json` on `ptc/data`.
-
-3. **Footer rendering** (`pages/resources/build-footer.html`): Client-side JavaScript fetches `build-info.json` from the GitHub API and renders a collapsible footer on every page. Responses are cached in `sessionStorage` (1 hour TTL) to avoid API rate limits.
+2. **Footer rendering** (`pages/resources/build-footer.html`): Client-side JavaScript fetches `build-info.json` from the GitHub API and renders a collapsible footer on every page. Responses are cached in `sessionStorage` (1 hour TTL) to avoid API rate limits.
 
 ### What's recorded
 

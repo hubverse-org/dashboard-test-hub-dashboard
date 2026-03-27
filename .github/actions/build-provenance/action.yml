@@ -1,10 +1,7 @@
 name: "Record build provenance"
-description: "Query tool versions and write build-info.json to the ptc/data branch"
+description: "Query all tool versions and write build-info.json to the build-info branch"
 
 inputs:
-  phase:
-    description: "'data' to create build-info.json after data build, 'site' to add site-builder digest before site build"
-    required: true
   github-token:
     description: "GitHub token with contents:write permission"
     required: true
@@ -19,22 +16,7 @@ runs:
         curl -sL "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" | tar -xz crane
         sudo mv crane /usr/local/bin/
 
-    - name: "Check ptc/data branch exists"
-      id: check-branch
-      shell: bash
-      run: |
-        if git ls-remote --exit-code --heads \
-          "https://github.com/${{ github.repository }}.git" ptc/data > /dev/null 2>&1; then
-          echo "exists=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "exists=false" >> "$GITHUB_OUTPUT"
-          echo "ptc/data branch does not exist yet, skipping"
-        fi
-
-    # --- Data phase: create build-info.json with all tool versions ---
-
     - name: "Query predtimechart version"
-      if: inputs.phase == 'data' && steps.check-branch.outputs.exists == 'true'
       id: ptc
       shell: bash
       env:
@@ -44,15 +26,20 @@ runs:
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
     - name: "Query predevals Docker digest"
-      if: inputs.phase == 'data' && steps.check-branch.outputs.exists == 'true'
       id: predevals
       shell: bash
       run: |
         digest=$(crane digest ghcr.io/hubverse-org/hubpredevalsdata-docker:latest)
         echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
+    - name: "Query site-builder Docker digest"
+      id: site-builder
+      shell: bash
+      run: |
+        digest=$(crane digest ghcr.io/hubverse-org/hub-dash-site-builder:latest)
+        echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
     - name: "Query hub repo commit"
-      if: inputs.phase == 'data' && steps.check-branch.outputs.exists == 'true'
       id: hub
       shell: bash
       env:
@@ -65,22 +52,29 @@ runs:
         echo "commit=$commit" >> "$GITHUB_OUTPUT"
 
     - name: "Write and push build-info.json"
-      if: inputs.phase == 'data' && steps.check-branch.outputs.exists == 'true'
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.github-token }}
         PTC_TAG: ${{ steps.ptc.outputs.tag }}
         PREDEVALS_DIGEST: ${{ steps.predevals.outputs.digest }}
+        SITE_BUILDER_DIGEST: ${{ steps.site-builder.outputs.digest }}
         HUB_SLUG: ${{ steps.hub.outputs.slug }}
         HUB_COMMIT: ${{ steps.hub.outputs.commit }}
       run: |
         SHORT_DASH=$(echo "${{ github.sha }}" | head -c 7)
         SHORT_HUB=$(echo "$HUB_COMMIT" | head -c 7)
 
-        git clone --depth 1 --branch ptc/data \
-          "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" data-branch
+        REPO_URL="https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+        if git ls-remote --exit-code --heads "$REPO_URL" build-info > /dev/null 2>&1; then
+          git clone --depth 1 --branch build-info "$REPO_URL" info-branch
+        else
+          mkdir info-branch && cd info-branch && git init
+          git remote add origin "$REPO_URL"
+          git checkout --orphan build-info
+          cd ..
+        fi
 
-        cat > data-branch/build-info.json << ENDJSON
+        cat > info-branch/build-info.json << ENDJSON
         {
           "build_timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
           "predtimechart": {
@@ -93,7 +87,11 @@ runs:
             "digest": "${PREDEVALS_DIGEST}",
             "url": "https://github.com/hubverse-org/hubPredEvalsData-docker/pkgs/container/hubpredevalsdata-docker"
           },
-          "site_builder": null,
+          "site_builder": {
+            "image": "ghcr.io/hubverse-org/hub-dash-site-builder:latest",
+            "digest": "${SITE_BUILDER_DIGEST}",
+            "url": "https://github.com/hubverse-org/hub-dash-site-builder/pkgs/container/hub-dash-site-builder"
+          },
           "dashboard": {
             "repo": "${{ github.repository }}",
             "commit": "${SHORT_DASH}",
@@ -112,45 +110,9 @@ runs:
         }
         ENDJSON
 
-        cd data-branch
+        cd info-branch
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add build-info.json
         git diff --cached --quiet || git commit -m "Update build provenance"
-        git push
-
-    # --- Site phase: add site-builder digest to existing build-info.json ---
-
-    - name: "Query site-builder Docker digest"
-      if: inputs.phase == 'site' && steps.check-branch.outputs.exists == 'true'
-      id: site-builder
-      shell: bash
-      run: |
-        digest=$(crane digest ghcr.io/hubverse-org/hub-dash-site-builder:latest)
-        echo "digest=$digest" >> "$GITHUB_OUTPUT"
-
-    - name: "Update build-info.json with site-builder digest"
-      if: inputs.phase == 'site' && steps.check-branch.outputs.exists == 'true'
-      shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.github-token }}
-        DIGEST: ${{ steps.site-builder.outputs.digest }}
-      run: |
-        git clone --depth 1 --branch ptc/data \
-          "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" data-branch
-        cd data-branch
-        if [ ! -f build-info.json ]; then
-          echo "build-info.json not found, skipping"
-          exit 0
-        fi
-        jq --arg digest "$DIGEST" '.site_builder = {
-          "image": "ghcr.io/hubverse-org/hub-dash-site-builder:latest",
-          "digest": $digest,
-          "url": "https://github.com/hubverse-org/hub-dash-site-builder/pkgs/container/hub-dash-site-builder"
-        }' build-info.json > build-info.json.tmp
-        mv build-info.json.tmp build-info.json
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add build-info.json
-        git diff --cached --quiet || git commit -m "Update site-builder provenance"
-        git push
+        git push origin build-info
