@@ -1,6 +1,7 @@
 pages/_site/*
 pages/.quarto/*
 pages/resources/*
+!pages/resources/build-footer.html
 pages/_quarto.yml
 pages/forecasts.qmd
 pages/forecast.qmd

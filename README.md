@@ -21,8 +21,10 @@ This repo provides a controlled environment for:
 
 ## Workflows
 
-- `build-data.yaml`: Generates forecast and evaluation data via the control-room reusable workflow
-- `build-site.yaml`: Builds and deploys the Quarto site to GitHub Pages
+- `build-data.yaml`: Generates forecast and evaluation data via the control-room reusable workflow, then records build provenance
+- `build-site.yaml`: Records site-builder version, then builds and deploys the Quarto site to GitHub Pages
+
+See [TESTING.md](TESTING.md) for details on the build provenance system.
 
 ## Related
 

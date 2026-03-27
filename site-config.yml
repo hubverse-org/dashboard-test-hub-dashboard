@@ -3,3 +3,5 @@ hub: "hubverse-org/dashboard-test-hub/"
 title: "Dashboard Test Hub"
 pages:
   - "about.md"
+html:
+  include-after-body: "resources/build-footer.html"

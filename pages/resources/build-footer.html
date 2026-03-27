@@ -1,0 +1,126 @@
+<!-- Preserve external-links-in-new-tab behavior from site builder's blank.html -->
+<script type="text/javascript">
+var all_links = document.querySelectorAll('a');
+for (var i = 0; i < all_links.length; i++){
+  var a = all_links[i];
+  if(a.hostname != location.hostname) {
+    a.rel = 'noopener';
+    a.target = '_blank';
+  }
+}
+</script>
+
+<!-- Build provenance footer -->
+<style>
+.build-provenance {
+  border-top: 1px solid #e9ecef;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+.build-provenance summary {
+  cursor: pointer;
+  user-select: none;
+}
+.build-provenance-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  margin-top: 0.5rem;
+}
+.build-provenance a {
+  color: #6c757d;
+  text-decoration: underline;
+}
+</style>
+
+<div class="build-provenance" id="build-provenance"></div>
+
+<script type="text/javascript">
+(function() {
+  // Derive repo info from GitHub Pages URL: {owner}.github.io/{repo}/
+  var owner, repo;
+  try {
+    var host = window.location.hostname;
+    var path = window.location.pathname.split('/').filter(Boolean);
+    if (host.endsWith('.github.io')) {
+      owner = host.replace('.github.io', '');
+      repo = path[0] || '';
+    }
+  } catch(e) {}
+
+  if (!owner || !repo) return;
+
+  // Check sessionStorage cache (1 hour TTL)
+  var cacheKey = 'build-provenance-' + owner + '-' + repo;
+  var cached = null;
+  try {
+    var raw = sessionStorage.getItem(cacheKey);
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      if (parsed.expires > Date.now()) {
+        cached = parsed.data;
+      }
+    }
+  } catch(e) {}
+
+  var dataPromise = cached
+    ? Promise.resolve(cached)
+    : fetch('https://api.github.com/repos/' + owner + '/' + repo +
+            '/contents/build-info.json?ref=ptc/data')
+        .then(function(r) {
+          if (!r.ok) throw new Error(r.status);
+          return r.json();
+        })
+        .then(function(apiResp) {
+          var info = JSON.parse(atob(apiResp.content));
+          try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({
+              data: info,
+              expires: Date.now() + 3600000
+            }));
+          } catch(e) {}
+          return info;
+        });
+
+  dataPromise
+    .then(function(info) {
+      var el = document.getElementById('build-provenance');
+      var ts = info.build_timestamp
+        ? new Date(info.build_timestamp).toLocaleString()
+        : 'unknown';
+
+      var items = [];
+      if (info.predtimechart && info.predtimechart.version) {
+        items.push('<a href="' + info.predtimechart.url + '">predtimechart ' +
+                   info.predtimechart.version + '</a>');
+      }
+      if (info.predevals_docker && info.predevals_docker.digest) {
+        items.push('<a href="' + info.predevals_docker.url + '">predevals ' +
+                   info.predevals_docker.digest.substring(0, 19) + '</a>');
+      }
+      if (info.site_builder && info.site_builder.digest) {
+        items.push('<a href="' + info.site_builder.url + '">site-builder ' +
+                   info.site_builder.digest.substring(0, 19) + '</a>');
+      }
+      if (info.dashboard && info.dashboard.commit) {
+        items.push('<a href="' + info.dashboard.url + '">dashboard ' +
+                   info.dashboard.commit + '</a>');
+      }
+      if (info.hub && info.hub.commit) {
+        items.push('<a href="' + info.hub.url + '">hub ' +
+                   info.hub.commit + '</a>');
+      }
+
+      el.innerHTML = '<details><summary>Build info &middot; ' + ts +
+        '</summary><div class="build-provenance-details">' +
+        items.join(' &middot; ') + '</div></details>';
+    })
+    .catch(function() {
+      // Silently fail if build-info.json is not available
+    });
+})();
+</script>

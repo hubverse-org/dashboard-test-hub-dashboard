@@ -16,7 +16,20 @@ permissions:
   contents: write
 
 jobs:
+  update-site-builder-info:
+    name: "Record site-builder version"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-provenance
+        with:
+          phase: site
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   site:
+    needs: [update-site-builder-info]
     uses: hubverse-org/hub-dashboard-control-room/.github/workflows/generate-site.yaml@main
     with:
       owner: '${{ github.event.repository.owner.login }}'
