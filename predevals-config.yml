@@ -16,6 +16,29 @@ targets:
   - reference_date
   - horizon
   - target_end_date
+- target_id: wk inc flu death
+  metrics:
+  - wis
+  - ae_median
+  - interval_coverage_50
+  - interval_coverage_95
+  relative_metrics:
+  - wis
+  - ae_median
+  baseline: Flusight-baseline
+  disaggregate_by:
+  - location
+  - reference_date
+  - horizon
+  - target_end_date
+- target_id: wk flu hosp rate category
+  metrics:
+  - log_score
+  disaggregate_by:
+  - location
+  - reference_date
+  - horizon
+  - target_end_date
 eval_sets:
 - eval_set_name: All rounds
   round_filters:
