@@ -1,0 +1,13 @@
+"model_id","horizon","log_score","n"
+"Flusight-baseline",0,Inf,212
+"Flusight-baseline",1,Inf,212
+"Flusight-baseline",2,Inf,212
+"Flusight-baseline",3,Inf,212
+"MOBS-GLEAM_FLUH",0,Inf,180
+"MOBS-GLEAM_FLUH",1,Inf,180
+"MOBS-GLEAM_FLUH",2,Inf,180
+"MOBS-GLEAM_FLUH",3,Inf,180
+"PSI-DICE",0,0.893181079779825,212
+"PSI-DICE",1,Inf,212
+"PSI-DICE",2,Inf,212
+"PSI-DICE",3,Inf,212
