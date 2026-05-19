@@ -1,5 +1,5 @@
 {
-  "build_timestamp": "2026-05-19T08:52:24Z",
+  "build_timestamp": "2026-05-19T12:53:17Z",
   "predtimechart": {
     "version": "v2.3.0",
     "repo": "hubverse-org/hub-dashboard-predtimechart",
@@ -17,15 +17,15 @@
   },
   "dashboard": {
     "repo": "hubverse-org/dashboard-test-hub-dashboard",
-    "branch": "3/merge",
-    "commit": "f3b82fb",
-    "url": "https://github.com/hubverse-org/dashboard-test-hub-dashboard/commit/f3b82fb552d66b6bc90092937f0dac5c6ea1e857"
+    "branch": "5/merge",
+    "commit": "a844208",
+    "url": "https://github.com/hubverse-org/dashboard-test-hub-dashboard/commit/a84420852098b47b9adf2465f475a4995cecf42e"
   },
   "hub": {
     "repo": "hubverse-org/dashboard-test-hub",
     "branch": "main",
-    "commit": "808aeaa",
-    "url": "https://github.com/hubverse-org/dashboard-test-hub/commit/808aeaaedf858943862f060cef4d972db6c84e0a"
+    "commit": "0a00609",
+    "url": "https://github.com/hubverse-org/dashboard-test-hub/commit/0a00609e51453ee04ca14aea46b60858622c7e68"
   },
   "control_room": {
     "repo": "hubverse-org/hub-dashboard-control-room",
