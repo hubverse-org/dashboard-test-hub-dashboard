@@ -4,6 +4,7 @@ targets:
 - target_id: wk inc flu hosp
   transform:
     fun: log_shift
+    label: log
     args:
       offset: 1
     append: true
