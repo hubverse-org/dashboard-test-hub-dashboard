@@ -1,5 +1,5 @@
 {
-  "build_timestamp": "2026-08-14T18:35:36Z",
+  "build_timestamp": "2026-08-14T18:59:39Z",
   "predtimechart": {
     "version": "v2.4.0",
     "repo": "hubverse-org/hub-dashboard-predtimechart",
@@ -17,9 +17,9 @@
   },
   "dashboard": {
     "repo": "hubverse-org/dashboard-test-hub-dashboard",
-    "branch": "9/merge",
-    "commit": "22f2de1",
-    "url": "https://github.com/hubverse-org/dashboard-test-hub-dashboard/commit/22f2de14ebc5bd6e20f55c43a36409c5c9629114"
+    "branch": "main",
+    "commit": "e830694",
+    "url": "https://github.com/hubverse-org/dashboard-test-hub-dashboard/commit/e830694e2402da722a473ccc35e9be6517439970"
   },
   "hub": {
     "repo": "hubverse-org/dashboard-test-hub",
